@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "823326984545",
+    "project_id": "library-management-syste-52668",
+    "storage_bucket": "library-management-syste-52668.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823326984545:android:b8d3cb328e888f4ce6dd20",
+        "android_client_info": {
+          "package_name": "com.lexusdevelopers.library_management_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrpusGHsDI6L3booDFo3kQC_KcYbtjoJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
