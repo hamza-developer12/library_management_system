@@ -52,15 +52,14 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
       ),
     );
   }
-
   Future<void> saveCapturedImage() async {
+
     // Capture the screenshot as Uint8List
     final Uint8List? uint8list = await screenshotController.capture();
 
     if (uint8list != null) {
       // Request permission to write to external storage
       final PermissionStatus status = await Permission.storage.request();
-
       if (status.isGranted) {
         try {
           // Get the device's directory to save the file (like Pictures)
@@ -91,6 +90,7 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
         FlushMessage.errorFlushMessage(context, "Storage permission not granted");
       }
     } else {
+      await openAppSettings();
       FlushMessage.errorFlushMessage(context, "Failed to capture image");
     }
   }
