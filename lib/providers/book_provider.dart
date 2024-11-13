@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -313,4 +314,24 @@ class BookProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Stream<List<Map<String, dynamic>>> getRecommendedBooks(String genre, String viewedBookId) {
+    return firestore.collection("books")
+        .where("book_genre", isEqualTo: genre)
+        .snapshots()
+        .map((snapshot) {
+
+      // Convert documents to a list of maps and filter out the currently viewed book
+      List<Map<String, dynamic>> books = snapshot.docs
+          .where((doc) => doc.id != viewedBookId) // Exclude the viewed book
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      // Shuffle the list to randomize the order
+      books.shuffle(Random());
+
+      // Take the first 10 books from the shuffled list
+      return books.take(10).toList();
+    });
+  }
+
 }
