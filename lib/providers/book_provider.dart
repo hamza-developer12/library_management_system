@@ -155,7 +155,71 @@ class BookProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  // Student applying for book functionality here.....
+  Future<void> applyForBook(
+      Map<String, dynamic> data, BuildContext context) async {
+    loading = true;
+    notifyListeners();
+    try {
+      QuerySnapshot studentSnapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .where("email", isEqualTo: data["studentEmail"])
+          .get();
 
+      if (studentSnapshot.docs.isEmpty) {
+        FlushMessage.errorFlushMessage(context, "User Not Found");
+      } else {
+        Map<String, dynamic> doc =
+        studentSnapshot.docs.first.data() as Map<String, dynamic>;
+        DocumentReference docRef = firestore.collection('allocate_books').doc();
+        DocumentSnapshot bookDoc = await FirebaseFirestore.instance
+            .collection("books")
+            .doc(data["bookId"])
+            .get();
+        FirebaseFirestore.instance
+            .collection("allocate_books")
+            .doc(docRef.id)
+            .set({
+          "id": docRef.id,
+          "bookName": data["bookName"],
+          "bookAuthor": data["bookAuthor"],
+          "bookGenre": data["bookGenre"],
+          "bookId": data["bookId"],
+          "bookAllocationDate": data["bookAllocationDate"],
+          "bookReturnDate": data["bookReturnDate"],
+          "studentName": data["studentName"],
+          "studentEmail": doc["email"],
+          "status": "pending",
+        });
+        // Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
+        // int remaining = bookData["remaining"] ?? 0;
+        //
+        // await FirebaseFirestore.instance
+        //     .collection("books")
+        //     .doc(bookData["book_id"])
+        //     .update({
+        //   "remaining": remaining - 1,
+        // });
+        //
+        // if (context.mounted) {
+        //   Navigator.pop(context);
+        //   if (data["status"] == "approved") {
+        //     FlushMessage.successFlushMessage(
+        //         context, "Book Allocated Successfully");
+        //   } else {
+        //     FlushMessage.successFlushMessage(
+        //         context, "Applied For Book Allocation");
+        //   }
+        // }
+      }
+    } catch (err) {
+      print(err);
+      FlushMessage.errorFlushMessage(context, "An error occurred");
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
+  }
   Future<List<Map<String, dynamic>>> getAllocatedBookStudents(
       String bookId, BuildContext context) async {
     loading = true;
@@ -297,11 +361,20 @@ class BookProvider extends ChangeNotifier {
     loading = true;
     notifyListeners();
     try {
-      await FirebaseFirestore.instance
+      DocumentSnapshot<Map<String,dynamic>> data = await FirebaseFirestore.instance
           .collection("allocate_books")
-          .doc(id)
-          .update({
-        "status": status,
+          .doc(id).get();
+      Map<String,dynamic> bookData = data.data() as Map<String,dynamic>;
+      DocumentSnapshot book = await FirebaseFirestore.instance.collection("books").doc(bookData["bookId"]).get();
+      Map<String,dynamic> bookInfo = book.data() as Map<String,dynamic>;
+
+      int remaining = bookInfo["remaining"] ?? 0;
+
+      await book.reference.update({
+        "remaining": remaining - 1
+      });
+      await data.reference.update({
+        "status": "approved"
       });
       if (context.mounted) {
         Navigator.pop(context);
@@ -323,7 +396,7 @@ class BookProvider extends ChangeNotifier {
       // Convert documents to a list of maps and filter out the currently viewed book
       List<Map<String, dynamic>> books = snapshot.docs
           .where((doc) => doc.id != viewedBookId) // Exclude the viewed book
-          .map((doc) => doc.data() as Map<String, dynamic>)
+          .map((doc) => doc.data())
           .toList();
 
       // Shuffle the list to randomize the order

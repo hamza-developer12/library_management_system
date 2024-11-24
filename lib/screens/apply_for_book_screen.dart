@@ -246,7 +246,7 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await value
-                                  .allocateBooksToStudent(bookData, context)
+                                  .applyForBook(bookData, context)
                                   .then((_) {
                                 _bookNameController.clear();
                                 _bookAuthorController.clear();
