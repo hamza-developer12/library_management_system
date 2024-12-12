@@ -17,8 +17,11 @@ class _AddBookScreenState extends State<AddBookScreen> {
   final _formKey = GlobalKey<FormState>();
   final _bookNameController = TextEditingController();
   final _bookAuthorNameController = TextEditingController();
+  final _bookPublisherController = TextEditingController();
   final _bookGenreController = TextEditingController();
   final _bookQuantityController = TextEditingController();
+  final _bookFineController = TextEditingController();
+  final _bookPriceController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -92,6 +95,24 @@ class _AddBookScreenState extends State<AddBookScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10.0, vertical: 10),
                         child: CustomTextField(
+                          controller: _bookPublisherController,
+                          textInputType: TextInputType.number,
+                          hintText: "Enter Book Publisher",
+                          obscureText: false,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please Provide Book Publisher";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                      // const SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 10),
+                        child: CustomTextField(
                           controller: _bookQuantityController,
                           textInputType: TextInputType.number,
                           hintText: "Enter Book Quantity",
@@ -105,6 +126,41 @@ class _AddBookScreenState extends State<AddBookScreen> {
                           },
                         ),
                       ),
+                      // const SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 10),
+                        child: CustomTextField(
+                          controller: _bookPriceController,
+                          textInputType: TextInputType.number,
+                          hintText: "Enter Book Price",
+                          obscureText: false,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Please Provide Book Price";
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: CustomTextField(
+                            controller: _bookFineController,
+                            textInputType: TextInputType.number,
+                            hintText: "Enter Book Fine Amount",
+                            obscureText: false,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please Provide Book Fine";
+                              } else {
+                                return null;
+                              }
+                            }),
+                      ),
+
                       const SizedBox(height: 15),
                       Consumer<BookProvider>(
                         builder: (context, value, child) {
@@ -148,14 +204,21 @@ class _AddBookScreenState extends State<AddBookScreen> {
                                                 .validate()) {
                                               value
                                                   .addBook(
-                                                      _bookNameController.text,
-                                                      _bookAuthorNameController
-                                                          .text,
-                                                      _bookGenreController.text,
-                                                      int.parse(
-                                                          _bookQuantityController
-                                                              .text),
-                                                      context)
+                                                _bookNameController.text,
+                                                _bookAuthorNameController.text,
+                                                _bookGenreController.text,
+                                                int.parse(
+                                                    _bookQuantityController
+                                                        .text),
+                                                int.parse(
+                                                  _bookFineController.text,
+                                                ),
+                                                int.parse(
+                                                  _bookPriceController.text,
+                                                ),
+                                                _bookPublisherController.text,
+                                                context,
+                                              )
                                                   .then((_) {
                                                 FlushMessage.successFlushMessage(
                                                     context,

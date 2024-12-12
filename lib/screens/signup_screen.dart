@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:library_management_system/screens/login_screen.dart';
 import 'package:library_management_system/providers/auth_provider.dart';
 import 'package:library_management_system/utils/constants.dart';
 import 'package:library_management_system/utils/flushmessage.dart';
@@ -18,8 +17,10 @@ class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _cmsIdController = TextEditingController();
+  final _departmentController = TextEditingController();
+  final _phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -33,136 +34,195 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: const Text(
-                          "Name",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Name",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        alignment: Alignment.center,
-                        width: width * 0.9,
-                        child: CustomTextField(
-                          controller: _nameController,
-                          textInputType: TextInputType.name,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please provide a name";
-                            } else {
-                              return null;
-                            }
-                          },
-                          hintText: "Enter Name",
-                          obscureText: false,
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      alignment: Alignment.center,
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _nameController,
+                        textInputType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide a name";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Enter Name",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Email",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: const Text(
-                          "Email",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _emailController,
+                        textInputType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value!.isEmpty || !value.contains("@")) {
+                            return "Please provide a valid email";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Enter Student Email",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "CMS Id",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: width * 0.9,
-                        child: CustomTextField(
-                          controller: _emailController,
-                          textInputType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value!.isEmpty || !value.contains("@")) {
-                              return "Please provide a valid email";
-                            } else {
-                              return null;
-                            }
-                          },
-                          hintText: "Enter Email",
-                          obscureText: false,
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _cmsIdController,
+                        textInputType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide a cms id";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Enter Student CMS Id",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Department",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: const Text(
-                          "Phone Number",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _departmentController,
+                        textInputType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide student department";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Enter Student Department",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Phone Number",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: width * 0.9,
-                        child: CustomTextField(
-                          controller: _phoneController,
-                          hintText: "Enter Phone Number",
-                          textInputType: TextInputType.text,
-                          obscureText: false,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Please provide a valid phone number";
-                            } else {
-                              return null;
-                            }
-                          },
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _phoneController,
+                        hintText: "Enter Phone Number",
+                        textInputType: TextInputType.text,
+                        obscureText: false,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide a valid phone number";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Password",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: const Text(
-                          "Password",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _passwordController,
+                        textInputType: TextInputType.text,
+                        hintText: "Enter Password",
+                        obscureText: true,
+                        validator: (value) {
+                          if (value!.length < 6) {
+                            return "Password must be 6 characters long";
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: width * 0.9,
-                        child: CustomTextField(
-                          controller: _passwordController,
-                          hintText: "Enter Password",
-                          textInputType: TextInputType.text,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value!.length < 6) {
-                              return "Password must be 6 characters long";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Consumer<AuthProvider>(
                 builder: (context, value, child) {
                   if (value.loading == true) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: CircularProgressIndicator(
+                          color: Constants.primaryColor,
+                        ));
                   } else {
                     return SizedBox(
                       width: width * 0.85,
@@ -170,48 +230,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         onPressed: () {
                           _register(value);
                         },
-                        title: "Sign Up",
+                        title: "Signup",
                       ),
                     );
                   }
                 },
-              ),
-              const SizedBox(height: 18),
-              Container(
-                width: width * 0.9,
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Already have an account?",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                          (route) => false,
-                        );
-                      },
-                      child: const Text(
-                        "Log In",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Constants.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),
@@ -223,10 +246,17 @@ class _SignupScreenState extends State<SignupScreen> {
   void _register(AuthProvider value) {
     if (_formKey.currentState!.validate()) {
       value
-          .signup(_nameController.text, _emailController.text,_phoneController.text,
-              _passwordController.text, 'student')
+          .signup(
+          _nameController.text,
+          _emailController.text,
+          _phoneController.text,
+          _passwordController.text,
+          'student',
+          'student',
+          _departmentController.text,
+          _cmsIdController.text)
           .then((_) {
-        FlushMessage.successFlushMessage(context, "Registration Successfull");
+        FlushMessage.successFlushMessage(context, "Student Added Successfully");
       }).catchError((error) {
         FlushMessage.errorFlushMessage(context, error.toString());
       });

@@ -39,6 +39,24 @@ class _BookInfoTabState extends State<BookInfoTab> {
               ),
             ),
             Text(
+              "Publisher: ${widget.data['book_publisher']}",
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              "Book Price: ${widget.data['book_price']}",
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              "Late Return Fine: ${widget.data['book_fine']}",
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
               "Book Genre: ${widget.data["book_genre"]}",
               style: const TextStyle(
                 fontSize: 20,

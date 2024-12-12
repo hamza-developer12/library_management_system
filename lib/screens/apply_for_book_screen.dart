@@ -23,6 +23,8 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
   final TextEditingController _bookIdController = TextEditingController();
   final TextEditingController _studentNameController = TextEditingController();
   final TextEditingController _studentEmailController = TextEditingController();
+  final TextEditingController _bookPriceController = TextEditingController();
+  final TextEditingController _lateFineController = TextEditingController();
   final TextEditingController _bookAllocationDateController =
   TextEditingController();
   final TextEditingController _bookReturnDateController =
@@ -30,18 +32,21 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
   MobileScannerController scannerController = MobileScannerController();
   Barcode? _barcode;
   Future<void> scanQrCode() async {
-    await showDialog(context: context,
+    await showDialog(
+      context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Scan Qr Code"),
-          content: Container(
+          content: SizedBox(
             width: 300,
             height: 300,
             child: MobileScanner(
               controller: scannerController,
-              onDetect: (BarcodeCapture barCodes){
+              onDetect: (BarcodeCapture barCodes) {
                 _barcode = barCodes.barcodes.firstOrNull;
-                if(_barcode != null && _barcode!.rawValue != null && _barcode!.rawValue!.isNotEmpty){
+                if (_barcode != null &&
+                    _barcode!.rawValue != null &&
+                    _barcode!.rawValue!.isNotEmpty) {
                   setState(() {
                     _scanResult = _barcode!.rawValue;
                   });
@@ -63,21 +68,24 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
     if (_scanResult != null) {
       try {
         Map<String, dynamic> jsonData = jsonDecode(_scanResult!);
+        print("the result of camera is ... $jsonData");
         _bookNameController.text = jsonData["book_name"] ?? "";
         _bookAuthorController.text = jsonData["book_author"] ?? "";
         _bookGenreController.text = jsonData["book_genre"] ?? "";
         _bookIdController.text = jsonData["book_id"] ?? "";
+        _bookPriceController.text = jsonData["book_price"].toString() ?? "";
+        _lateFineController.text = jsonData["book_fine"].toString() ?? "";
       } catch (e) {
         debugPrint("Error decoding JSON: $e");
-        _bookNameController.clear();
-        _bookAuthorController.clear();
-        _bookGenreController.clear();
+        // _bookNameController.clear();
+        // _bookAuthorController.clear();
+        // _bookGenreController.clear();
       }
     } else {
-      _bookNameController.clear();
-      _bookGenreController.clear();
-      _bookAuthorController.clear();
-      _bookIdController.clear();
+      // _bookNameController.clear();
+      // _bookGenreController.clear();
+      // _bookAuthorController.clear();
+      // _bookIdController.clear();
     }
   }
 
@@ -85,7 +93,7 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Allocate Book"),
+        title: const Text("Apply For Book"),
         actions: [
           IconButton(
             icon: const Icon(Icons.qr_code_scanner),
@@ -103,7 +111,8 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                 CustomTextField(
                   controller: _bookNameController,
                   hintText: "Enter Book Name",
-                  textInputType: TextInputType.name,
+                  textInputType: TextInputType.text,
+                  readOnly: true,
                   obscureText: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -116,8 +125,9 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                 const SizedBox(height: 15),
                 CustomTextField(
                   controller: _bookAuthorController,
-                  textInputType: TextInputType.name,
+                  textInputType: TextInputType.text,
                   hintText: "Enter Book Author Name",
+                  readOnly: true,
                   obscureText: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -132,6 +142,7 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                   textInputType: TextInputType.text,
                   controller: _bookGenreController,
                   hintText: "Enter Book Genre",
+                  readOnly: true,
                   obscureText: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -147,9 +158,40 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                   textInputType: TextInputType.text,
                   hintText: "Enter Book Id",
                   obscureText: false,
+                  readOnly: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please Provide book Id";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                  controller: _bookPriceController,
+                  textInputType: TextInputType.number,
+                  hintText: "Enter Book Price",
+                  obscureText: false,
+                  readOnly: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Provide book Price";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                  controller: _lateFineController,
+                  textInputType: TextInputType.number,
+                  hintText: "Enter Late Return Fine",
+                  obscureText: false,
+                  readOnly: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please Provide Late Return Fine";
                     } else {
                       return null;
                     }
@@ -229,6 +271,8 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                       "bookAuthor": _bookAuthorController.text,
                       "bookGenre": _bookGenreController.text,
                       "bookId": _bookIdController.text,
+                      "bookPrice": _bookPriceController.text,
+                      "lateFine": _lateFineController.text,
                       "studentName": _studentNameController.text,
                       "studentEmail": _studentEmailController.text,
                       "bookAllocationDate": _bookAllocationDateController.text,
@@ -246,12 +290,14 @@ class _ApplyForBookScreenState extends State<ApplyForBookScreen> {
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               await value
-                                  .applyForBook(bookData, context)
+                                  .allocateBooksToStudent(bookData, context)
                                   .then((_) {
                                 _bookNameController.clear();
                                 _bookAuthorController.clear();
                                 _bookGenreController.clear();
                                 _bookIdController.clear();
+                                _bookPriceController.clear();
+                                _lateFineController.clear();
                                 _bookAllocationDateController.clear();
                                 _bookReturnDateController.clear();
                                 _studentNameController.clear();

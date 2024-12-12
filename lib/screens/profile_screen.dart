@@ -54,6 +54,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),),
+                  const SizedBox(height: 20),
+                  if(snapshot.data!['specificRole'] != "student")
+                    Text("Title: ${snapshot.data!['specificRole']}", style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),),
+
+
+                  if(snapshot.data!['specificRole'] == "student")
+                    Text("Department: ${snapshot.data!['department']}", style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                    const SizedBox(height: 20),
+                    if(snapshot.data!['specificRole'] == "student")
+                    Text("CMS Id: ${snapshot.data!['cmsId']}", style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),),
+
                 ],
               ),
             );

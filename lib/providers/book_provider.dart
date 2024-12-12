@@ -32,7 +32,7 @@ class BookProvider extends ChangeNotifier {
   }
 
   Future<void> addBook(String bookName, String bookAuthor, String bookGenre,
-      int bookQuantity, BuildContext context) async {
+      int bookQuantity, int bookFine, int bookPrice, String bookPublisher ,BuildContext context) async {
     if (_image == null) {
       // Handle the case where no image is selected
       message = "No Image Selected";
@@ -60,8 +60,11 @@ class BookProvider extends ChangeNotifier {
         "book_id": bookId,
         "book_name": bookName,
         "book_author": bookAuthor,
+        "book_publisher": bookPublisher,
         "book_genre": bookGenre,
         "book_quantity": bookQuantity,
+        "book_price": bookPrice,
+        "book_fine": bookFine,
         "remaining": bookQuantity,
         "cover_image": downloadUrl
       });
@@ -95,6 +98,9 @@ class BookProvider extends ChangeNotifier {
       Map<String, dynamic> data, BuildContext context) async {
     loading = true;
     notifyListeners();
+
+    int bookPrice = int.parse(data["bookPrice"]);
+    int lateFine = int.parse(data["lateFine"]);
     try {
       QuerySnapshot studentSnapshot = await FirebaseFirestore.instance
           .collection("users")
@@ -120,6 +126,8 @@ class BookProvider extends ChangeNotifier {
           "bookAuthor": data["bookAuthor"],
           "bookGenre": data["bookGenre"],
           "bookId": data["bookId"],
+          "bookPrice": bookPrice,
+          "lateFine": lateFine,
           "bookAllocationDate": data["bookAllocationDate"],
           "bookReturnDate": data["bookReturnDate"],
           "studentName": data["studentName"],
@@ -154,6 +162,16 @@ class BookProvider extends ChangeNotifier {
       loading = false;
       notifyListeners();
     }
+  }
+
+  // Single Allocated Book Detail
+  Future<Map<String,dynamic>> getBookAllocatedDetails(String id) async {
+    QuerySnapshot record = await firestore.collection("allocate_books")
+        .where("bookId", isEqualTo: id)
+        .get();
+
+    print(record.docs.first.data());
+    return record.docs.first.data() as Map<String,dynamic>;
   }
   // Student applying for book functionality here.....
   Future<void> applyForBook(
@@ -228,6 +246,7 @@ class BookProvider extends ChangeNotifier {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection("allocate_books")
           .where("bookId", isEqualTo: bookId)
+          .where("status", isEqualTo: "approved")
           .get();
       if (snapshot.docs.isEmpty) {
         throw Exception("Record Not Found");
@@ -267,7 +286,9 @@ class BookProvider extends ChangeNotifier {
       //   await doc.reference.delete();
       // }
 
-      await query.reference.delete();
+      await query.reference.update({
+        "status": "returned"
+      });
       if (context.mounted) {
         Navigator.pushAndRemoveUntil(
             context,
@@ -337,6 +358,7 @@ class BookProvider extends ChangeNotifier {
       QuerySnapshot allocatedBooks = await FirebaseFirestore.instance
           .collection("allocate_books")
           .where("studentEmail", isEqualTo: studentEmail)
+          .where("status", isEqualTo: "pending")
           .get();
       return allocatedBooks.docs
           .map((e) => e.data() as Map<String, dynamic>)
@@ -345,7 +367,21 @@ class BookProvider extends ChangeNotifier {
       throw Exception(error.toString());
     }
   }
-
+  // Single Student Book Records.....
+  Future<List<Map<String, dynamic>>> getSingleStudentBookRecord(
+      BuildContext context, String email) async {
+    try {
+      QuerySnapshot allocatedBooks = await firestore
+          .collection("allocate_books")
+          .where("studentEmail", isEqualTo: email)
+          .get();
+      return allocatedBooks.docs
+          .map((e) => e.data() as Map<String, dynamic>)
+          .toList();
+    } catch (error) {
+      throw Exception(error.toString());
+    }
+  }
   Stream<List> pendingRequests() {
     return FirebaseFirestore.instance
         .collection("allocate_books")
@@ -354,6 +390,22 @@ class BookProvider extends ChangeNotifier {
         .map((snapshot) {
       return snapshot.docs.map((doc) => doc.data()).toList();
     });
+  }
+  // Get All Students............
+  Future<List<Map<String,dynamic>>> GetStudensRecord() async {
+   QuerySnapshot records = await  firestore.collection("users")
+        .where("role" , isEqualTo: "student").get();
+   return records.docs.map(
+           (entry)=> entry.data() as Map<String,dynamic>
+   ).toList();
+  }
+
+  // Single Student Record............
+  Future<Map<String,dynamic>> getSingleRecord(String email) async {
+    QuerySnapshot record = await firestore.collection("users")
+
+        .where("email", isEqualTo: email).get();
+    return record.docs.first.data() as Map<String,dynamic>;
   }
 
   Future<void> approveRequest(

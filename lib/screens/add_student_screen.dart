@@ -18,6 +18,8 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _cmsIdController = TextEditingController();
+  final _departmentController = TextEditingController();
   final _phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -91,6 +93,64 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                           }
                         },
                         hintText: "Enter Student Email",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "CMS Id",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _cmsIdController,
+                        textInputType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide a cms id";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Enter Student CMS Id",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Department",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _departmentController,
+                        textInputType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide student department";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Enter Student Department",
                         obscureText: false,
                       ),
                     ),
@@ -186,8 +246,15 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   void _register(AuthProvider value) {
     if (_formKey.currentState!.validate()) {
       value
-          .signup(_nameController.text, _emailController.text,_phoneController.text,
-              _passwordController.text, 'student')
+          .signup(
+              _nameController.text,
+              _emailController.text,
+              _phoneController.text,
+              _passwordController.text,
+              'student',
+              'student',
+              _departmentController.text,
+              _cmsIdController.text)
           .then((_) {
         FlushMessage.successFlushMessage(context, "Student Added Successfully");
       }).catchError((error) {

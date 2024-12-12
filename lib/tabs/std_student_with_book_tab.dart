@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:library_management_system/providers/book_provider.dart';
 import 'package:library_management_system/utils/constants.dart';

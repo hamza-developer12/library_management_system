@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:library_management_system/utils/flushmessage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,8 +51,8 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
       ),
     );
   }
-  Future<void> saveCapturedImage() async {
 
+  Future<void> saveCapturedImage() async {
     // Capture the screenshot as Uint8List
     final Uint8List? uint8list = await screenshotController.capture();
 
@@ -72,28 +71,27 @@ class _GenerateQrScreenState extends State<GenerateQrScreen> {
           }
 
           // Create file path and save the image
-          final String fileName = 'qr_code_${DateTime.now().millisecondsSinceEpoch}.png';
-         final result = await SaverGallery.saveImage(uint8list, name: fileName,
-             androidExistNotSave: true
-             );
+          final String fileName =
+              'qr_code_${DateTime.now().millisecondsSinceEpoch}.png';
+          final result = await SaverGallery.saveImage(uint8list,
+              name: fileName, androidExistNotSave: true);
 
-          if(result.isSuccess){
-
-          FlushMessage.successFlushMessage(context, "Image saved successfully");
-          }else {
+          if (result.isSuccess) {
+            FlushMessage.successFlushMessage(
+                context, "Image saved successfully");
+          } else {
             FlushMessage.errorFlushMessage(context, "Unable To Save Image");
           }
         } catch (e) {
           FlushMessage.errorFlushMessage(context, "Error saving image: $e");
         }
       } else {
-        FlushMessage.errorFlushMessage(context, "Storage permission not granted");
+        FlushMessage.errorFlushMessage(
+            context, "Storage permission not granted");
       }
     } else {
       await openAppSettings();
       FlushMessage.errorFlushMessage(context, "Failed to capture image");
     }
   }
-
-
 }

@@ -140,17 +140,20 @@ class _AdminDashboardScreen extends State<AdminDashboardScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SizedBox(height: height * 0.01),
-                              CachedNetworkImage(
-                                imageUrl:
-                                    books[index]["cover_image"].toString(),
-                                progressIndicatorBuilder:
-                                    (context, url, progress) =>
-                                        CircularProgressIndicator(
-                                  value: progress.progress,
-                                  color: Constants.primaryColor,
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      books[index]["cover_image"].toString(),
+                                  progressIndicatorBuilder:
+                                      (context, url, progress) =>
+                                          CircularProgressIndicator(
+                                    value: progress.progress,
+                                    color: Constants.primaryColor,
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: height * 0.02),
+                              // SizedBox(height: height * 0.02),
                             ],
                           ),
                         ),

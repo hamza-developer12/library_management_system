@@ -11,7 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider extends ChangeNotifier {
   bool loading = false;
   final _auth = FirebaseAuth.instance;
-  Future<void> signup(String name, String email,String phoneNumber, String password, String role) async {
+
+  // Signup...........
+  Future<void> signup(String name, String email,String phoneNumber,
+      String password, String role, String specificRole,
+      String department, String cmsId) async {
     try {
       loading = true;
       notifyListeners();
@@ -25,6 +29,9 @@ class AuthProvider extends ChangeNotifier {
           'uid': user.uid,
           'name': name,
           'email': email,
+          'cmsId': cmsId,
+          'department': department,
+          'specificRole': specificRole,
           'phoneNumber': phoneNumber,
           'role': role,
         });

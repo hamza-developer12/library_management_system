@@ -18,6 +18,7 @@ class _AddLibrarianScreenState extends State<AddLibrarianScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _specificRoleController = TextEditingController();
   final _phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -91,6 +92,35 @@ class _AddLibrarianScreenState extends State<AddLibrarianScreen> {
                           }
                         },
                         hintText: "Enter Email",
+                        obscureText: false,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: const Text(
+                        "Title",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: width * 0.9,
+                      child: CustomTextField(
+                        controller: _specificRoleController,
+                        textInputType: TextInputType.text,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Please provide a title";
+                          } else {
+                            return null;
+                          }
+                        },
+                        hintText: "Library Manager, Assistant",
                         obscureText: false,
                       ),
                     ),
@@ -187,7 +217,11 @@ class _AddLibrarianScreenState extends State<AddLibrarianScreen> {
     if (_formKey.currentState!.validate()) {
       value
           .signup(_nameController.text, _emailController.text,_phoneController.text,
-          _passwordController.text, "admin")
+          _passwordController.text, "admin",
+          _specificRoleController.text,
+          "",
+          ""
+      )
           .then((_) {
         FlushMessage.successFlushMessage(context, "Librarian Added Successfully");
       }).catchError((error) {

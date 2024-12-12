@@ -6,6 +6,7 @@ import 'package:library_management_system/screens/add_student_screen.dart';
 import 'package:library_management_system/screens/allocate_book_screen.dart';
 import 'package:library_management_system/screens/chats_list_screen.dart';
 import 'package:library_management_system/screens/pending_screen.dart';
+import 'package:library_management_system/screens/user_record_screen.dart';
 import 'package:library_management_system/utils/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +73,7 @@ class DashboardLayout extends StatelessWidget {
                 ),
                 // Divider(color: Colors.white),
                 const SizedBox(height: 20),
-                // Logout.........
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: InkWell(
@@ -135,6 +136,43 @@ class DashboardLayout extends StatelessWidget {
                           SizedBox(width: 20),
                           Text(
                             "Add Librarian",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UserRecordScreen(),
+                          ));
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.white)),
+                      ),
+                      padding: const EdgeInsets.only(top: 20, bottom: 5),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.file_copy_outlined,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 20),
+                          Text(
+                            "Users Record",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,

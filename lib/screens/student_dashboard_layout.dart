@@ -110,6 +110,7 @@ class _StudentDashboardLayoutState extends State<StudentDashboardLayout> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),

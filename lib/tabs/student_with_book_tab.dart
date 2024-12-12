@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:library_management_system/providers/book_provider.dart';
+import 'package:library_management_system/screens/collect_book_screen.dart';
 import 'package:library_management_system/utils/constants.dart';
 
 class StudentWithBookTab extends StatefulWidget {
@@ -39,43 +40,45 @@ class _StudentWithBookTabState extends State<StudentWithBookTab> {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            snapshot.data![index]['studentEmail'],
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.push(context,
+                        MaterialPageRoute(
+                          builder: (context) => CollectBookScreen(
+                            id: widget.bookId,
                           ),
-                          const SizedBox(height: 5),
-                          Text(snapshot.data![index]['bookReturnDate']),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(snapshot.data![index]['status']),
-                          IconButton(
-                            onPressed: () {
-                              _deleteRecord(
-                                  snapshot.data![index]["id"],
-                                  snapshot.data![index]["bookId"],
-                                  snapshot.data![index]['studentEmail'],
-                                  context);
-                            },
-                            icon: const Icon(Icons.delete),
-                          )
-                        ],
-                      ),
-                    ],
+                        ),
+                    );
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              snapshot.data![index]['studentEmail'],
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(snapshot.data![index]['bookReturnDate']),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(snapshot.data![index]['status']),
+
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -86,33 +89,5 @@ class _StudentWithBookTabState extends State<StudentWithBookTab> {
     );
   }
 
-  void _deleteRecord(
-      String id, String bookId, String studentEmail, BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            "Are You Sure You Want To Delete",
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  bookProvider.deleteAllocatedBook(
-                      id, bookId, studentEmail, "Book Returned", context);
-                },
-                child: const Text("Yes")),
-            TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text("No"))
-          ],
-        );
-      },
-    );
-  }
+
 }

@@ -116,8 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               FlushMessage.successFlushMessage(
                                   context, "Login Successful");
                             }).catchError((error) {
+
                               FlushMessage.errorFlushMessage(
-                                  context, error.toString());
+                                  context, "User Not Found");
                             });
                           }
                         },
