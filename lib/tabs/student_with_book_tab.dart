@@ -50,34 +50,37 @@ class _StudentWithBookTabState extends State<StudentWithBookTab> {
                         ),
                     );
                   },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              snapshot.data![index]['studentEmail'],
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshot.data![index]['studentEmail'],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(snapshot.data![index]['bookReturnDate']),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(snapshot.data![index]['status']),
-
-                          ],
-                        ),
-                      ],
+                              const SizedBox(height: 5),
+                              Text(snapshot.data![index]['bookReturnDate']),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(snapshot.data![index]['status']),
+                    
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
