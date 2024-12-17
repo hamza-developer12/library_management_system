@@ -202,12 +202,15 @@ class BookProvider extends ChangeNotifier {
           "bookName": data["bookName"],
           "bookAuthor": data["bookAuthor"],
           "bookGenre": data["bookGenre"],
+          "bookPrice": data["bookPrice"],
           "bookId": data["bookId"],
           "bookAllocationDate": data["bookAllocationDate"],
           "bookReturnDate": data["bookReturnDate"],
           "studentName": data["studentName"],
           "studentEmail": doc["email"],
           "status": "pending",
+        }).then((_){
+          FlushMessage.successFlushMessage(context, "Applied For Book Successfully");
         });
         // Map<String, dynamic> bookData = bookDoc.data() as Map<String, dynamic>;
         // int remaining = bookData["remaining"] ?? 0;
@@ -301,7 +304,15 @@ class BookProvider extends ChangeNotifier {
       print(error);
     }
   }
-
+  // Get all students
+  Stream<List> getStudents() {
+    return FirebaseFirestore.instance
+        .collection("users").where("role", isEqualTo: "student")
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => doc.data()).toList();
+    });
+  }
   Future<void> updateBook(BuildContext context, Map<String, dynamic> data,
       String name, String author, String genre) async {
     loading = true;
@@ -358,7 +369,7 @@ class BookProvider extends ChangeNotifier {
       QuerySnapshot allocatedBooks = await FirebaseFirestore.instance
           .collection("allocate_books")
           .where("studentEmail", isEqualTo: studentEmail)
-          .where("status", isEqualTo: "pending")
+          .where("status", isEqualTo: "approved")
           .get();
       return allocatedBooks.docs
           .map((e) => e.data() as Map<String, dynamic>)
